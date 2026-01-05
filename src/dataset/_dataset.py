@@ -3,6 +3,8 @@ import torch
 from torch.utils.data import Dataset, DataLoader
 from torchvision import transforms
 from datasets import load_dataset
+from PIL import Image
+import io
 
 
 class StyleTransferDataset(Dataset):
@@ -58,8 +60,8 @@ class StyleTransferDataset(Dataset):
         return len(self.dataset)
 
     def __getitem__(self, idx: int) -> torch.Tensor:
-        """Load and transform an image."""
-        image = self.dataset[idx][self.column]
+        image_data = self.dataset[idx][self.column]
+        image = Image.open(io.BytesIO(image_data['bytes']))
 
         if image.mode != 'RGB':
             image = image.convert('RGB')
@@ -118,8 +120,8 @@ class PairedDataset(Dataset):
     def __getitem__(self, idx: int) -> tuple[torch.Tensor, torch.Tensor]:
         row = self.dataset[idx]
 
-        photo = row['imageB']
-        monet = row['imageA']
+        photo = Image.open(io.BytesIO(row['imageB']['bytes']))
+        monet = Image.open(io.BytesIO(row['imageA']['bytes']))
 
         if photo.mode != 'RGB':
             photo = photo.convert('RGB')
