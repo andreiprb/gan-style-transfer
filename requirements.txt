@@ -1,4 +1,10 @@
-uv
-numpy
 torch
+torchvision
+numpy
 matplotlib
+scipy
+datasets
+pyyaml
+tqdm
+Pillow
+ipykernel
